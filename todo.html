@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Q3 — To-Do List (localStorage)</title>
+  <style>
+    body{margin:0; font-family:system-ui, Arial, sans-serif; background:#f6f7f9; color:#111;}
+    header, footer{background:#fff; border-bottom:1px solid #e5e7eb; padding:12px 16px;}
+    footer{border-top:1px solid #e5e7eb; border-bottom:none; text-align:center;}
+    main{max-width:720px; margin:0 auto; padding:24px 16px;}
+    .card{background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:16px;}
+    .row{display:flex; gap:8px;}
+    input[type="text"]{flex:1; padding:10px; border:1px solid #cbd5e1; border-radius:6px;}
+    button{padding:10px 14px; border:1px solid #cbd5e1; background:#fff; border-radius:6px; cursor:pointer;}
+    button:hover{background:#f0f3f8;}
+    ul{list-style:none; padding:0; margin:16px 0 0;}
+    li{display:flex; align-items:center; gap:8px; border:1px solid #e5e7eb; background:#fff; padding:10px; border-radius:6px; margin-bottom:8px;}
+    .text{flex:1;}
+    .done .text{ text-decoration: line-through; color:#6b7280; }
+    .empty{color:#666; text-align:center; padding:16px 0;}
+  </style>
+</head>
+<body>
+  <header><a href="index.html">← Back</a></header>
+  <main>
+    <div class="card">
+      <h2>To-Do List</h2>
+      <div class="row">
+        <input id="taskInput" type="text" placeholder="Type a task..." />
+        <button id="addBtn">Add</button>
+      </div>
+
+      <ul id="list"></ul>
+      <div id="empty" class="empty" hidden>No tasks yet.</div>
+    </div>
+  </main>
+
+  <script>
+    const KEY = 'tasks.v1';
+    let tasks = load();
+
+    const listEl = document.getElementById('list');
+    const emptyEl = document.getElementById('empty');
+    const inputEl = document.getElementById('taskInput');
+
+    function load(){
+      try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+      catch { return []; }
+    }
+    function save(){ localStorage.setItem(KEY, JSON.stringify(tasks)); }
+
+    function addTask(text){
+      if(!text.trim()) return;
+      tasks.push({ id: Date.now(), text: text.trim(), completed: false });
+      save(); render();
+    }
+    function toggleTask(id){
+      const t = tasks.find(x => x.id === id);
+      if (t){ t.completed = !t.completed; save(); render(); }
+    }
+    function deleteTask(id){
+      tasks = tasks.filter(x => x.id !== id);
+      save(); render();
+    }
+
+    function render(){
+      listEl.innerHTML = '';
+      if (tasks.length === 0){ emptyEl.hidden = false; return; }
+      emptyEl.hidden = true;
+
+      tasks.forEach(t => {
+        const li = document.createElement('li');
+        if (t.completed) li.classList.add('done');
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = t.completed;
+        cb.addEventListener('change', () => toggleTask(t.id));
+
+        const span = document.createElement('span');
+        span.className = 'text';
+        span.textContent = t.text;
+
+        const del = document.createElement('button');
+        del.textContent = 'Delete';
+        del.addEventListener('click', () => deleteTask(t.id));
+
+        li.append(cb, span, del);
+        listEl.appendChild(li);
+      });
+    }
+
+    document.getElementById('addBtn').addEventListener('click', () => {
+      addTask(inputEl.value); inputEl.value = ''; inputEl.focus();
+    });
+    inputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { addTask(inputEl.value); inputEl.value=''; }
+    });
+
+    render();
+  </script>
+</body>
+</html>

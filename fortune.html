@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Q1 — Fortune Generator</title>
+  <style>
+    :root{
+      --bg:#ffffff; --text:#111; --border:#d1d5db; --size:16px; --font:system-ui, Arial, sans-serif;
+    }
+    body{margin:0; background:#f6f7f9; color:#111; font-family:var(--font);}
+    header, footer{background:#fff; border-bottom:1px solid #e5e7eb; padding:12px 16px;}
+    footer{border-top:1px solid #e5e7eb; border-bottom:none; text-align:center;}
+    main{min-height:calc(100vh - 120px); 
+         display:flex; flex-direction:column; justify-content:flex-end;}
+    .wrap{max-width:720px; margin:0 auto; width:100%; padding:0 16px 20px;}
+    .fortune-box{
+      background:var(--bg); color:var(--text); border:2px solid var(--border);
+      padding:12px 14px; border-radius:6px; font-size:var(--size);
+      font-family:var(--font); box-shadow:0 0 0 rgba(0,0,0,0);
+    }
+    .controls{display:flex; gap:8px; margin-top:10px; align-items:center;}
+    .swt{width:28px; height:28px; border:1px solid #cbd5e1; border-radius:4px; cursor:pointer;}
+.theme-green  { --bg:#F1F8E9; --text:#2E7D32; --border:#4CAF50; --size:16px;   --font:Verdana, Geneva, sans-serif; }
+.theme-yellow { --bg:#FFF8DB; --text:#A85507; --border:#F4C430; --size:16.5px; --font:Arial, Helvetica, sans-serif; }
+.theme-blue   { --bg:#E8F1FB; --text:#1E40AF; --border:#5CA4E6; --size:16px;   --font:"Trebuchet MS", Arial, sans-serif; }
+.theme-orange { --bg:#FFE5D1; --text:#9A3412; --border:#F39C34; --size:17px;    --font:Georgia, "Times New Roman", serif; }
+.fortune-box{ border-width:3px; }
+    .row{display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap;}
+  </style>
+</head>
+<body class="theme-orange">
+  <header><a href="index.html">← Back</a></header>
+
+  <main>
+    <div class="wrap">
+      <div class="row" style="justify-content:center;">
+        <div id="fortune" class="fortune-box" role="status" aria-live="polite">
+        </div>
+
+     <div class="controls" aria-label="Style choices">
+  <button class="swt" data-theme="theme-green"  title="Green"  style="background:#4CAF50"></button>
+  <button class="swt" data-theme="theme-yellow" title="Yellow" style="background:#F4C430"></button>
+  <button class="swt" data-theme="theme-blue"   title="Blue"   style="background:#5CA4E6"></button>
+  <button class="swt" data-theme="theme-orange" title="Orange" style="background:#F39C34"></button>
+</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>Click a color to restyle the box.</footer>
+
+  <script>
+    const fortunes = [
+      "True wisdom comes not from knowledge, but from understanding.",
+      "Small steps every day lead to big results.",
+      "Patience is bitter, but its fruit is sweet.",
+      "Your consistency will open doors talent can’t.",
+      "A calm mind brings clear decisions.",
+      "Every expert was once a beginner.",
+      "Focus on progress, not perfection.",
+      "You become what you repeatedly do.",
+      "Opportunities increase as you take them.",
+      "Discipline is the bridge between goals and success."
+    ];
+
+    const box = document.getElementById('fortune');
+    function pickRandom() {
+      const idx = Math.floor(Math.random() * fortunes.length);
+      box.textContent = fortunes[idx];
+    }
+    pickRandom();
+
+    document.querySelectorAll('.swt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.body.className = btn.dataset.theme; 
+      });
+    });
+  </script>
+</body>
+</html>

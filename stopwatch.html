@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Q2 — Stopwatch</title>
+  <style>
+    body{margin:0; font-family:system-ui, Arial, sans-serif; background:#f6f7f9; color:#111;}
+    header, footer{background:#fff; border-bottom:1px solid #e5e7eb; padding:12px 16px;}
+    footer{border-top:1px solid #e5e7eb; border-bottom:none; text-align:center;}
+    main{max-width:720px; margin:0 auto; padding:24px 16px;}
+    .card{background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:16px;}
+    .display{font-size:48px; font-weight:700; text-align:center; margin:16px 0;}
+    .btns{display:flex; gap:10px; justify-content:center;}
+    button{padding:10px 14px; border:1px solid #cbd5e1; background:#fff; border-radius:6px; cursor:pointer;}
+    button:hover{background:#f0f3f8;}
+  </style>
+</head>
+<body>
+  <header><a href="index.html">← Back</a></header>
+  <main>
+    <div class="card">
+      <h2>Stopwatch </h2>
+      <div id="time" class="display">0</div>
+      <div class="btns">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="reset">Reset</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    let current = 0;        
+    let timerId = null;      
+    const timeEl = document.getElementById('time');
+
+    function render(){ timeEl.textContent = current; }
+
+    function start() {
+      if (timerId !== null) return;    
+      if (current >= 30) return;       
+      timerId = setInterval(() => {
+        current += 3;
+        if (current >= 30) {
+          current = 30;
+          stop();
+        }
+        render();
+      }, 3000);
+    }
+    function stop(){
+      if (timerId !== null) {
+        clearInterval(timerId);
+        timerId = null;
+      }
+    }
+    function reset(){
+      stop();
+      current = 0;
+      render();
+    }
+
+    document.getElementById('start').addEventListener('click', start);
+    document.getElementById('stop').addEventListener('click', stop);
+    document.getElementById('reset').addEventListener('click', reset);
+    render();
+  </script>
+</body>
+</html>
